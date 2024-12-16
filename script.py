@@ -40,7 +40,7 @@ def main():
             break
 
         log("loop: address")
-        time.sleep(DELAY * 6)
+        time.sleep(DELAY * 6 * 5)
 
     log(f"address: {address}")
 
