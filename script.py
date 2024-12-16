@@ -1,3 +1,10 @@
+# /// script
+# requires-python = ">=3.11"
+# dependencies = [
+#     "requests",
+# ]
+# ///
+
 import os
 import pty
 import time
