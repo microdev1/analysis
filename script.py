@@ -32,11 +32,20 @@ def main():
 
     log("start")
 
-    address = tuple(requests.get(URL_GET).json()["last_value"].split(":"))
+    while True:
+        address = requests.get(URL_GET).json()["last_value"].split(":")
+
+        if len(address) == 2 and all(address):
+            address = (str(address[0]), int(address[1]))
+            break
+
+        log("loop: address")
+        time.sleep(DELAY * 6)
+
     log(f"address: {address}")
 
     while True:
-        log("loop")
+        log("loop: connect")
 
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
