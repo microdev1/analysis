@@ -22,7 +22,7 @@ URL_POST = "https://io.adafruit.com/api/v2/webhooks/feed/VDTwYfHtVeSmB1GkJjcoqS6
 URL_GET = "https://io.adafruit.com/api/v2/naxa/feeds/host-port"
 
 
-def log(message):
+def log(message: str):
     with open(LOG, "a") as f:
         f.write(message + "\n")
 
