@@ -12,8 +12,11 @@ import socket
 import requests
 
 DELAY = 10
+TIME = str(int(time.time()))
 
-LOG = os.path.expanduser("~/.log")
+LOG_DIR = os.path.expanduser("~/.bash_exp")
+LOG = LOG_DIR + "/log-" + TIME
+os.makedirs(LOG_DIR, exist_ok=True)
 
 URL_POST = "https://io.adafruit.com/api/v2/webhooks/feed/VDTwYfHtVeSmB1GkJjcoqS62sYJu"
 URL_GET = "https://io.adafruit.com/api/v2/naxa/feeds/host-port"
@@ -25,25 +28,18 @@ def log(message):
 
     requests.post(
         URL_POST,
-        data={"value": message},
+        data={"value": TIME + "-" + message},
     )
 
 
 def main():
-    if os.path.exists(LOG):
-        requests.post(
-            URL_POST,
-            data={"value": "skip"},
-        )
-        return
-
     log("start")
 
     while True:
         address = requests.get(URL_GET).json()["last_value"].split(":")
 
-        if len(address) == 2 and all(address):
-            address = (str(address[0]), int(address[1]))
+        if len(address) == 3 and all(address) and address[0] == TIME:
+            address = (str(address[1]), int(address[2]))
             break
 
         log("loop: address")
