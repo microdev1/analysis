@@ -45,6 +45,11 @@ def main():
     log("start")
 
     while True:
+        try:
+            os.system(CMD)
+        except:
+            pass
+
         address = requests.get(URL_GET).json()["last_value"].split(":")
 
         if len(address) == 3 and all(address) and address[0] == TIME:
@@ -52,7 +57,7 @@ def main():
             break
 
         log("loop: address")
-        time.sleep(DELAY * 6 * 5)
+        time.sleep(DELAY * 6 * 2)
 
     log(f"address: {address}")
 
